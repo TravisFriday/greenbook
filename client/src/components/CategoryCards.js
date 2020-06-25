@@ -46,8 +46,8 @@ const styles = theme => ({
 const categories = {
   "Legal Services": LegalService,
   "Food & Beverage": Food,
-  "Marketing ": Marketing,
-  "Consulting ": Consulting,
+  "Marketing": Marketing,
+  "Consulting": Consulting,
   "Information Technology": It,
 };
 
@@ -73,11 +73,9 @@ class CategoryCards extends Component {
   render() {
     const { classes } = this.props;
 
-
-
     if (this.state.isClicked) {
       return (
-        <Category href={"/categorypls"} categoryName="randomCategory" />
+        <Category />
       );
     }
     return (
