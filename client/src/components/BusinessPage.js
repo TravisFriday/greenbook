@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Route, withRouter } from "react-router"
 import Container from "@material-ui/core/Container";
@@ -7,6 +7,7 @@ import Card from "@material-ui/core/Card";
 import Typography from "@material-ui/core/Typography";
 import { MuiThemeProvider } from "@material-ui/core/styles";
 import theme from './theme'
+import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 const styles = theme => ({
     title: {
@@ -15,10 +16,10 @@ const styles = theme => ({
     }
 });
 
+const GOOGLE_MAP_API_KEY = 'AIzaSyBb8rOjZt6I7fy4KlYlG-nV1awsIKSNyz0';
+
 class BusinessPage extends Component {
-    constructor(props) {
-        super(props);
-    }
+
     render() {
         const { classes } = this.props;
 
@@ -72,7 +73,7 @@ class BusinessPage extends Component {
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={12}>
                                 <Typography variant='h5'>
-                                   Contact Details
+                                    Contact Details
                             </Typography>
                                 <Card>
                                     <Typography>
@@ -86,11 +87,11 @@ class BusinessPage extends Component {
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={12}>
                                 <Typography variant='h5'>
-                                   Photos
+                                    Photos
                             </Typography>
                                 <Card>
                                     <Typography>
-                                       Photo collection
+                                        Photo collection
                                 </Typography>
                                 </Card>
                             </Grid>
@@ -100,13 +101,26 @@ class BusinessPage extends Component {
                         <Grid container spacing={3}>
                             <Grid item xs={12} sm={12}>
                                 <Typography variant='h5'>
-                                   Locator
+                                    Locator
                             </Typography>
-                                <Card>
-                                    <Typography>
-                                        Google map
-                                </Typography>
-                                </Card>
+                                <Map google={this.props.google}
+                                     zoom={14}
+                                     style={{ width: '86%', height: '70%', position: 'relative' }}
+                                     initialCenter={{
+                                        lat: 49.246292,
+                                        lng: -123.116226
+                                      }}
+                                      zoomControl={true}>
+
+                                    <Marker onClick={this.onMarkerClick}
+                                        name={'Current location'} />
+
+                                    <InfoWindow onClose={this.onInfoWindowClose}>
+                                        <div>
+                                            <h1>name of Selected place</h1>
+                                        </div>
+                                    </InfoWindow>
+                                </Map>
                             </Grid>
                         </Grid>
 
@@ -118,4 +132,7 @@ class BusinessPage extends Component {
     }
 }
 
-export default withRouter(withStyles(styles)(BusinessPage));
+// export default withRouter(withStyles(styles)(BusinessPage));
+export default GoogleApiWrapper({
+    apiKey: ("AIzaSyBb8rOjZt6I7fy4KlYlG-nV1awsIKSNyz0")
+})(withRouter(withStyles(styles)(BusinessPage)))
