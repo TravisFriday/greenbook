@@ -1,5 +1,5 @@
-import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { Component } from "react";
+import { withStyles } from "@material-ui/core/styles";
 
 import { Row, Col, Container } from "react-bootstrap";
 import Card from "@material-ui/core/Card";
@@ -16,8 +16,11 @@ import It from "../assets/it.jpg";
 import LegalService from "../assets/legalService.jpg";
 import Food from "../assets/food.jpg";
 import Marketing from "../assets/marketing.jpg";
+import Category from "./Category"
+import { withRouter } from "react-router"
 
-const useStyles = makeStyles((theme) => ({
+
+const styles = theme => ({
   root: {
     flexGrow: 1,
     paddingTop: 70,
@@ -38,64 +41,94 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-}));
+});
 
 const categories = {
   "Legal Services": LegalService,
   "Food & Beverage": Food,
-  "Marketing ": Marketing,
-  "Consulting ": Consulting,
+  "Marketing": Marketing,
+  "Consulting": Consulting,
   "Information Technology": It,
 };
 
 const pictures = [Consulting, It, LegalService, Food, Marketing];
 
-export default function CategoryCards() {
-  const classes = useStyles();
+class CategoryCards extends Component {
+  constructor(props) {
+    super(props);
 
-  return (
-    <div className={classes.root}>
-      <Container fluid>
-        <Row>
-          {Object.entries(categories).map(([category, image]) => {
-            return (
-              <Col
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                style={{ paddingTop: "20px" }}
-                key={category}
-              >
-                <Card className={classes.card}>
-                  <CardActionArea>
-                    <CardMedia
-                      component="img"
-                      alt="Shop Goods"
-                      height="200"
-                      image={image}
-                      title={category}
-                    />
-                    <CardContent>
-                      <Typography
-                        className={classes.titleText}
-                        gutterBottom
-                        variant="h5"
-                        component="h2"
-                      >
-                        {category}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                </Card>
-              </Col>
-            );
-          })}
-        </Row>
-        {/* <Row>
+    this.state = {
+      isClicked: false
+    }
+  }
+  changeRouter = (categoryName) => {
+    localStorage.setItem("selectedCard", categoryName.category);
+    this.props.history.push(`${categoryName.category}`);
+    this.setState({
+      ...this.state,
+      isClicked: true
+    })
+  }
+
+  render() {
+    const { classes } = this.props;
+
+    if (this.state.isClicked) {
+      return (
+        <Category />
+      );
+    }
+    return (
+
+      <div className={classes.root}>
+        <Container fluid>
+          <Row>
+            {Object.entries(categories).map(([category, image]) => {
+              return (
+                <Col
+                  xs={12}
+                  sm={6}
+                  md={4}
+                  lg={3}
+                  style={{ paddingTop: "20px" }}
+                  key={category}
+                >
+                  <Card className={classes.card}
+                    onClick={
+                      () => this.changeRouter({ category })
+                    }>
+                    <CardActionArea>
+                      <CardMedia
+                        component="img"
+                        alt="Shop Goods"
+                        height="200"
+                        image={image}
+                        title={category}
+                      />
+                      <CardContent>
+                        <Typography
+                          className={classes.titleText}
+                          gutterBottom
+                          variant="h5"
+                          component="h2"
+                        >
+                          {category}
+                        </Typography>
+                      </CardContent>
+                    </CardActionArea>
+                  </Card>
+                </Col>
+              );
+            })}
+          </Row>
+          {/* <Row>
           <Col className={classes.row}></Col>
         </Row> */}
-      </Container>
-    </div>
-  );
+        </Container>
+      </div>
+    );
+
+  }
 }
+
+export default withRouter(withStyles(styles)(CategoryCards));
